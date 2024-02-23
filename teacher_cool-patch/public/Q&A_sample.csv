@@ -1,0 +1,6 @@
+"In Python, what is a negative index?","In Arrays and Lists, Python contains a unique feature called negative indexing. Python starts indexing from the beginning of an array or list in a positive integer but reads items from the ending of an array or list in a negative index."
+"What is the Python data type SET, and how can I use it?","""set"" is a Python data type which is a sort of collection. Since Python 2.4, it's been a part of the language. A set is a collection of distinct and immutable items that are not in any particular sequence."
+How do you print the summation of all the numbers from 1 to 101?,"Print( sum(range(1,102)) ) "
+Is Python programming language or scripting language?,"Although we can use Python to write scripts, it is primarily used as a general-purpose programming language.
+
+"
