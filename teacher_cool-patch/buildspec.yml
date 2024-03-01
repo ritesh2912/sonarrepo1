@@ -1,0 +1,35 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo "Installing Git"
+      - apt-get update
+      - apt-get install git -y
+      - pwd
+      - ls -al
+
+      - echo "Installing Git secrets"
+      - wget --quiet https://github.com/awslabs/git-secrets/archive/1.3.0.tar.gz
+      - tar -xzf 1.3.0.tar.gz
+      - cd git-secrets-1.3.0 && sudo make install && cd ..
+      - git-secrets --register-aws
+      - git-secrets --scan -r .
+      - if git-secrets --scan -r . | grep -q 'ERROR'; then exit 1; fi
+
+
+
+  build:
+    commands:
+
+
+      - echo "Installing SonarQube Scanner"
+      #- npm install -g sonarqube-scanner@latest
+
+      - echo "Running SonarCloud analysis"
+      #- sonar-scanner -Dsonar.projectKey=arjit547_logo -Dsonar.organization=arjit547 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${SONAR_LOGIN} -Dsonar.qualitygate.wait=true
+
+artifacts:
+  files: '**/*'
+  #base-directory: build
+  discard-paths: yes
