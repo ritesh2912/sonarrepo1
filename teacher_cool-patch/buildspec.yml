@@ -10,7 +10,7 @@ phases:
   pre_build:
     commands:
       # Authenticate Snyk using your API token
-      - snyk auth 9bc62721-b0d1-4ba3-9d7d-71f85c0f712f
+      - snyk auth f190347f-7e21-490b-b989-07ad258c2ef3
   build:
     commands:
       # Run Snyk test to check for vulnerabilities
