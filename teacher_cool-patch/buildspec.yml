@@ -1,9 +1,6 @@
 version: 0.2
 
 phases:
-  install:
-    runtime-versions:
-      nodejs: 14
   pre_build:
     commands:
       - echo "Installing Git"
@@ -20,14 +17,19 @@ phases:
       - git-secrets --scan -r .
       - if git-secrets --scan -r . | grep -q 'ERROR'; then exit 1; fi
 
+
+
   build:
     commands:
-      - echo "Installing Synk CLI"
-      - npm install -g synk
 
-      - echo "Running Synk for security analysis"
-      - synk test
+
+      - echo "Installing SonarQube Scanner"
+      #- npm install -g sonarqube-scanner@latest
+
+      - echo "Running SonarCloud analysis"
+      #- sonar-scanner -Dsonar.projectKey=arjit547_logo -Dsonar.organization=arjit547 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${SONAR_LOGIN} -Dsonar.qualitygate.wait=true
 
 artifacts:
   files: '**/*'
+  #base-directory: build
   discard-paths: yes
