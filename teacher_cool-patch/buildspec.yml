@@ -1,35 +1,26 @@
 version: 0.2
 
 phases:
+  install:
+    runtime-versions:
+      nodejs: 14
+    commands:
+      # Install Snyk globally
+      - npm install -g snyk
   pre_build:
     commands:
-      - echo "Installing Git"
-      - apt-get update
-      - apt-get install git -y
-      - pwd
-      - ls -al
-
-      - echo "Installing Git secrets"
-      - wget --quiet https://github.com/awslabs/git-secrets/archive/1.3.0.tar.gz
-      - tar -xzf 1.3.0.tar.gz
-      - cd git-secrets-1.3.0 && sudo make install && cd ..
-      - git-secrets --register-aws
-      - git-secrets --scan -r .
-      - if git-secrets --scan -r . | grep -q 'ERROR'; then exit 1; fi
-
-
-
+      # Authenticate Snyk using your API token
+      - snyk auth 9bc62721-b0d1-4ba3-9d7d-71f85c0f712f
   build:
     commands:
-
-
-      - echo "Installing SonarQube Scanner"
-      #- npm install -g sonarqube-scanner@latest
-
-      - echo "Running SonarCloud analysis"
-      #- sonar-scanner -Dsonar.projectKey=arjit547_logo -Dsonar.organization=arjit547 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${SONAR_LOGIN} -Dsonar.qualitygate.wait=true
+      # Run Snyk test to check for vulnerabilities
+      - snyk test --all-projects --json > snyk_output.json
 
 artifacts:
-  files: '**/*'
-  #base-directory: build
-  discard-paths: yes
+  files: snyk_output.json
+
+post_build:
+  commands:
+    # Monitor vulnerabilities and fail the build if found
+    - snyk monitor --all-projects --json > snyk_monitor_output.json
+    - if [ "$(cat snyk_output.json | jq -r '.vulnerabilities.length')" -gt 0 ]; then echo "Vulnerabilities found. Failing the build."; exit 1; fi
